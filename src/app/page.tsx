@@ -1,5 +1,11 @@
 import Form from "@/components/form";
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Whatsapp Shortcut",
+  description: "Envía mensajes de WhatsApp sin necesidad de agregar contactos.",
+};
 
 export default function Home() {
   return (
@@ -8,8 +14,8 @@ export default function Home() {
         <Image
           src="/images/whatsapp-shortcut-logo.webp"
           alt="App logo"
-          width={100}
-          height={100}
+          width={120}
+          height={120}
         />
         <h1 className="text-center text-xl font-bold">Whatsapp Shortcut</h1>
         <div>
