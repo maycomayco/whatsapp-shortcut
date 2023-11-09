@@ -1,67 +1,61 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface IFormInput {
+  whatsappNumber: String;
+}
 
 export default function Form() {
-  const [number, setNumber] = useState("");
-  const [error, setError] = useState(false);
+  const { register, handleSubmit, formState } = useForm<IFormInput>();
+  const { errors } = formState;
 
-  const validatePhoneNumber = (number: string) => {
-    // regexp that checks if the lenght of the number is 10
-    const regexPhone = /^\d{10}$/;
-
-    return regexPhone.test(number);
-  };
-
-  const handleOnSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // check if the number is empty
-    if (!number) return;
-
-    if (!validatePhoneNumber(number)) return setError(true);
-
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data);
+    const number = data.whatsappNumber;
     window.open(`https://api.whatsapp.com/send?phone=${number}`, "_blank");
   };
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(false); // remove the error message if the user is typing
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // get the code of the key pressed
+    const isNumericKey = /^[0-9]$/.test(e.key);
 
-    const isNumber = /^\d+$/.test(e.target.value); // regexp to check if the value is a number
-
-    if (!isNumber) return; // short circuit if the value is not a number
-
-    setNumber(e.target.value);
+    if (!isNumericKey) e.preventDefault(); // prevent the user to type other than numbers
   };
 
   return (
-    <form onSubmit={handleOnSubmit} className="flex flex-col gap-2 sm:w-full">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-2 sm:w-full"
+    >
       <div>
-        <label htmlFor="whatsapp-number" className="hidden">
-          Numero de telefono
-        </label>
         <input
+          {...register("whatsappNumber", {
+            required: {
+              value: true,
+              message: "El numero es requerido",
+            },
+            pattern: {
+              value: /^\d{10}$/, // regexp that checks if the lenght of the number is 10
+              message: "El numero no es valido",
+            },
+          })}
           type="text"
-          name="whatsapp-number"
-          value={number}
-          className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none ${
-            error ? "border-red-500" : ""
-          }`}
+          name="whatsappNumber"
+          className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none`}
           placeholder="1123210708"
-          onChange={handleOnChange}
+          onKeyDown={handleKeyDown}
           autoFocus
         />
         <small
           className={`block text-sm text-red-600 dark:text-red-500 ${
-            error ? "visible" : "invisible"
+            errors ? "visible" : "invisible"
           }`}
         >
-          El número ingresado no es válido
+          {errors.whatsappNumber && errors.whatsappNumber.message}
         </small>
       </div>
-      <button
-        type="submit"
-        className="text-white bg-jungle-green-700 hover:bg-jungle-green-600 rounded-md px-2 py-2.5 focus:outline-none"
-      >
+      <button className="text-white bg-jungle-green-700 hover:bg-jungle-green-600 rounded-md px-2 py-2.5 focus:outline-none">
         Enviar mensaje!
       </button>
     </form>
