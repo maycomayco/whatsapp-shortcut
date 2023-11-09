@@ -42,16 +42,14 @@ export default function Form() {
           })}
           type="text"
           name="whatsappNumber"
-          className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none`}
+          className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none ${
+            errors.whatsappNumber ? "border-red-400 focus:border-red-400" : ""
+          }`}
           placeholder="1123210708"
           onKeyDown={handleKeyDown}
           autoFocus
         />
-        <small
-          className={`block text-sm text-red-600 dark:text-red-500 ${
-            errors ? "visible" : "invisible"
-          }`}
-        >
+        <small className={`px-2.5 block text-sm text-red-600 `}>
           {errors.whatsappNumber && errors.whatsappNumber.message}
         </small>
       </div>
