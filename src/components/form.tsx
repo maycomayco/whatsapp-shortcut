@@ -11,16 +11,8 @@ export default function Form() {
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
     const number = data.whatsappNumber;
-    window.open(`https://api.whatsapp.com/send?phone=${number}`, "_blank");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // get the code of the key pressed
-    const isNumericKey = /^[0-9]$/.test(e.key);
-
-    if (!isNumericKey) e.preventDefault(); // prevent the user to type other than numbers
+    window.open(`https://api.whatsapp.com/send?phone=${number}`);
   };
 
   return (
@@ -40,13 +32,12 @@ export default function Form() {
               message: "El numero no es valido",
             },
           })}
-          type="text"
+          type="number"
           name="whatsappNumber"
           className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none ${
             errors.whatsappNumber ? "border-red-400 focus:border-red-400" : ""
           }`}
           placeholder="1123210708"
-          onKeyDown={handleKeyDown}
           autoFocus
         />
         <small className={`px-2.5 block text-sm text-red-600 `}>
