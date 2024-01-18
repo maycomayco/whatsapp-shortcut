@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { NUMBER_VALIDATIONS, PHONE_REGEX, WHATSAPP_URL } from "@/lib/constants";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInput {
@@ -12,7 +12,10 @@ export default function Form() {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     const number = data.whatsappNumber;
-    window.open(`https://api.whatsapp.com/send?phone=${number}`);
+
+    const parsedNumber = number.startsWith("+") ? number.slice(1) : number;
+
+    window.open(WHATSAPP_URL + parsedNumber);
   };
 
   return (
@@ -25,14 +28,14 @@ export default function Form() {
           {...register("whatsappNumber", {
             required: {
               value: true,
-              message: "El numero es requerido",
+              message: NUMBER_VALIDATIONS.REQUIRED,
             },
             pattern: {
-              value: /^\d{10}$/, // regexp that checks if the lenght of the number is 10
-              message: "El numero no es valido",
+              value: PHONE_REGEX,
+              message: NUMBER_VALIDATIONS.INVALID,
             },
           })}
-          type="number"
+          type="text"
           name="whatsappNumber"
           className={`bg-gray-50 border border-cadet-gray-100 text-prussian-blue-900 rounded-md block w-full p-2.5 focus:border-jungle-green-100 focus:ring-jungle-green-100 focus:outline-none ${
             errors.whatsappNumber ? "border-red-400 focus:border-red-400" : ""
